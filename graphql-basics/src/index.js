@@ -48,12 +48,13 @@ const posts=[
     id: "3",
     title: "Work",
     body: "Ran some tests for Kanchan and did some work asked by trupti, both of them were pretty minor",
-    published: false
+    published: true
   }
 ]
 const typeDefs =`
   type Query{
     users(query: String):[User!]!
+    posts(query: String):[Post!]!
     me: User!
     postIt: Post!
   }
@@ -98,8 +99,18 @@ const resolvers = {
       return users.filter((user)=>{
         return user.name.toLowerCase().includes(args.query.toLowerCase())
       })
+    },
+    posts(parent, args, ctx, info){
+      if(!args.query){
+        return posts;
+      }
+      return posts.filter((post)=>{
+        return post.title.toLowerCase().includes(args.query.toLowerCase())
+      })
     }
   }
+
+
 }
 
 const server = new GraphQLServer({
